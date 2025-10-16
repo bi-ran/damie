@@ -1,0 +1,12 @@
+# ignore files without extensions
+*
+!*.*
+!*/
+
+# temporary files
+*.sw*
+
+# python files
+__pycache__/
+build/
+*.egg-info/
