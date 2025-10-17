@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools >= 77.0.3"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "damie"
+version = "0.0.1"
+dependencies = [
+    "click",
+]
+authors = [
+    { name="Ran Bi", email="biran@bjzgca.edu.cn" },
+]
+description = "a gluttonous cat"
+readme = "README.md"
+requires-python = ">=3.9"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+]
+license = "MIT"
+license-files = ["LICEN[CS]E*"]
+
+[project.scripts]
+damie = "damie.damie:cli"
