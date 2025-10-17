@@ -65,7 +65,7 @@ async def handle_request(reader, writer, db_path):
                     active_jobs[bowl_name][job_uuid]['last_heartbeat'] = time.time()
                     logging.info(f"HEARTBEAT: ACK {bowl_name}/{job_uuid}")
                 else:
-                    logging.warning(f"HEARTBEAT: {bowl_name}/{job_uuid} invalid")
+                    logging.warning(f"HEARTBEAT: {bowl_name}/{job_uuid} not found")
 
             elif command == 'DIGESTED':
                 (
@@ -86,11 +86,9 @@ async def handle_request(reader, writer, db_path):
                     )
                     del active_jobs[bowl_name][job_uuid]
 
-                    asyncio.create_task(log_job_to_db(db_path, job_details))
-                    response = f"SUCCESS: DIGESTED: {bowl_name}/{job_uuid}"
                     logging.info(f"DIGESTED: {bowl_name}/{job_uuid} by worker {addr}")
+                    asyncio.create_task(log_job_to_db(db_path, job_details))
                 else:
-                    response = f"ERROR: DIGESTED: job {bowl_name}/{job_uuid} not found"
                     logging.info(f"DIGESTED: {bowl_name}/{job_uuid} not found")
 
             elif command == 'LIST':

@@ -44,9 +44,9 @@ async def execute_job(command, env=None):
 
         runtime = time.monotonic() - start
         if (status := process.returncode) == 0:
-            logging.info(f"SUCCESS: job '{command}' [{runtime:.4f}s]")
+            logging.info(f"SUCCESS: '{command}' [{runtime:.4f}s] [{status}]")
         else:
-            logging.error(f"FAILURE: job '{command}' [{runtime:.4f}s] [{status}].")
+            logging.error(f"FAILURE: '{command}' [{runtime:.4f}s] [{status}]")
         return process.returncode, runtime
     except Exception as e:
         logging.error(f"ERROR: job '{command}': {e}")
@@ -71,13 +71,13 @@ async def process_job(host, port, heartbeat_interval, job_response, slot):
         job_env['__DAMIE_JOB_SLOT'] = str(slot)
         logging.info(f"EAT: {bowl}/{job_uuid} assigned slot: {slot}")
 
-        exit_code, runtime = await execute_job(command, env=job_env)
+        status, runtime = await execute_job(command, env=job_env)
     finally:
         heartbeat_task.cancel()
 
-    logging.info(f"DIGESTED: {bowl}/{job_uuid} digested with status {exit_code}")
+    logging.info(f"DIGESTED: {bowl}/{job_uuid} digested with status {status}")
     await send_command(
-        f'DIGESTED:4:{bowl}:{job_uuid}:{exit_code}:{runtime:.4f}', host, port
+        f'DIGESTED:4:{bowl}:{job_uuid}:{status}:{runtime:.4f}', host, port
     )
 
     return slot
